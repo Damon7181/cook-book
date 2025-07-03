@@ -24,13 +24,13 @@ export default function Home() {
             <p className="text-white text-sm md:text-base mb-4">
               Paste a URL to import a recipe or browse our communitys favorites.
             </p>
-            <div className="flex w-full max-w-md bg-white rounded-full overflow-hidden shadow-lg">
+            <div className="flex w-full max-w-md px-2 py-4  bg-white rounded-md overflow-hidden shadow-lg">
               <input
                 type="text"
                 placeholder="Paste a recipe URL"
                 className="flex-grow px-4 py-2 text-sm focus:outline-none text-black"
               />
-              <button className="bg-red-500 text-white px-6 py-2 text-sm hover:bg-red-600">
+              <button className="bg-red-500 text-white rounded-md px-6 py-2 text-sm hover:bg-red-600">
                 Import
               </button>
             </div>
@@ -44,24 +44,25 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {/* Card 1 */}
-            <div className="rounded-xl overflow-hidden shadow-md">
-              <Image
-                src="/pasta.jpg"
-                alt="Tomato Pasta"
-                width={400}
-                height={300}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-black">
-                  Classic Tomato Pasta
-                </h3>
-                <p className="text-sm text-gray-500">
-                  A simple yet flavorful pasta dish.
-                </p>
+            <Link href="/recipe">
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <Image
+                  src="/pasta.jpg"
+                  alt="Tomato Pasta"
+                  width={400}
+                  height={300}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="font-semibold text-black">
+                    Classic Tomato Pasta
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    A simple yet flavorful pasta dish.
+                  </p>
+                </div>
               </div>
-            </div>
-
+            </Link>
             {/* Card 2 */}
             <div className="rounded-xl overflow-hidden shadow-md">
               <Image
