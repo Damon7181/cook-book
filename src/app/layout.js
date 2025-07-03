@@ -1,16 +1,16 @@
-import { Plus_Jakarta_Sans, Noto_Sans } from 'next/font/google';
+import { Plus_Jakarta_Sans, Noto_Sans } from "next/font/google";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  display: 'swap',
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
 });
 
 const notoSans = Noto_Sans({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  display: 'swap',
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
 });
 
 export const metadata = {
@@ -21,10 +21,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${plusJakarta.className} ${notoSans.variable}`}
-      >
-        {children}
+      <body className={`${plusJakarta.className} ${notoSans.variable}`}>
+        <div className="bg-[#fcf8f8] text-black">{children}</div>
       </body>
     </html>
   );
