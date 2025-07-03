@@ -187,13 +187,17 @@ export default function RecipePage() {
                 Recipe <span className="text-black font-semibold">/ Pasta</span>
               </h4>
               <h1 className="text-3xl font-bold mb-4">Delicious Recipe</h1>
-              <Image
-                src="/pasta.jpg"
-                alt="Recipe Image"
-                width={1060}
-                height={100}
-                className="rounded-xl mb-6"
-              />
+              <div className="w-full flex justify-center">
+                <div className="relative w-[600px] h-[360px]">
+                  <Image
+                    src="/pasta.jpg"
+                    alt="Recipe Image"
+                    fill
+                    className="rounded-xl object-cover mb-6"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="px-4">
