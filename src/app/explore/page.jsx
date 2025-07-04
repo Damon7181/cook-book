@@ -56,6 +56,7 @@ export default function RecipesPage() {
     "Asian",
     "Desserts",
     "American",
+    "Desi",
   ];
 
   const filteredRecipes = recipes.filter((item) => {
