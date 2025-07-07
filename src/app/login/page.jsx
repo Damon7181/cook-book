@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Navbar from "../components/navbar";
 
 export default function LoginPage() {
@@ -27,7 +28,10 @@ export default function LoginPage() {
           </button>
           <p className="text-sm text-[#994d51]">
             Don’t have an account?{" "}
-            <span className="underline cursor-pointer">Sign up</span>
+            <span className="underline cursor-pointer">
+              {" "}
+              <Link href="/signup">Sign up</Link>{" "}
+            </span>
           </p>
         </div>
       </div>

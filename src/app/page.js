@@ -8,7 +8,7 @@ export default function Home() {
       <Navbar />
       <div className="container mx-auto px-6 max-w-7xl">
         {/* Hero Section */}
-        <section className="relative h-96 rounded-xl overflow-hidden mt-6">
+        {/* <section className="relative h-96 rounded-xl overflow-hidden mt-6">
           <Image
             src="/hero.jpg"
             alt="Cooking background"
@@ -31,6 +31,34 @@ export default function Home() {
                 className="flex-grow px-4 py-2 text-sm focus:outline-none text-black"
               />
               <button className="bg-red-500 text-white rounded-md px-6 py-2 text-sm hover:bg-red-600">
+                Import
+              </button>
+            </div>
+          </div>
+        </section> */}
+        <section className="relative h-96 sm:h-[30rem] rounded-xl overflow-hidden mt-6">
+          <Image
+            src="/hero.jpg"
+            alt="Cooking background"
+            fill
+            className="object-cover"
+            priority
+          />
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+            <h1 className="text-white text-2xl sm:text-4xl md:text-5xl font-bold mb-4 leading-snug">
+              Share and discover recipes from any website
+            </h1>
+            <p className="text-white text-sm sm:text-base md:text-lg mb-4 max-w-2xl">
+              Paste a URL to import a recipe or browse our communitys favorites.
+            </p>
+            <div className="w-full max-w-md px-2 py-3 bg-white rounded-md shadow-lg flex flex-col sm:flex-row gap-2 sm:gap-0 items-center">
+              <input
+                type="text"
+                placeholder="Paste a recipe URL"
+                className="w-full px-4 py-2 text-sm text-black focus:outline-none rounded-md sm:rounded-none sm:rounded-l-md"
+              />
+              <button className="w-full sm:w-auto bg-red-500 text-white px-6 py-2 text-sm rounded-md sm:rounded-l-none sm:rounded-r-md hover:bg-red-600 transition duration-200">
                 Import
               </button>
             </div>

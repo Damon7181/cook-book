@@ -175,20 +175,20 @@ export default function RecipePage() {
   const [activeTab, setActiveTab] = useState("overview");
   return (
     <>
-      <div className="relative  min-h-screen  bg-[#fcf8f8] overflow-x-hidden">
+      <div className="relative min-h-screen bg-[#fcf8f8] overflow-x-hidden">
         {/* HEADER */}
         <Navbar />
         <div className="flex h-full grow flex-col">
           {/* MAIN CONTENT */}
-          <main className="px-4 md:px-40 flex gap-36 justify-center py-5 text-black">
-            <div className="max-w-[960px] w-full ">
-              {/* Recipe Content */}
+          <main className="px-2 md:px-8 flex flex-col md:flex-row gap-8 md:gap-16 justify-center py-5 text-black w-full max-w-7xl mx-auto">
+            {/* Recipe Content */}
+            <div className="max-w-[600px] w-full flex-shrink-0 mx-auto md:mx-0 sticky top-24 self-start">
               <h4 className="text-red-900 text-sm mb-4">
                 Recipe <span className="text-black font-semibold">/ Pasta</span>
               </h4>
               <h1 className="text-3xl font-bold mb-4">Delicious Recipe</h1>
               <div className="w-full flex justify-center">
-                <div className="relative w-[600px] h-[360px]">
+                <div className="relative w-full max-w-[600px] h-[220px] md:h-[360px]">
                   <Image
                     src="/pasta.jpg"
                     alt="Recipe Image"
@@ -199,9 +199,9 @@ export default function RecipePage() {
                 </div>
               </div>
             </div>
-
-            <div className="px-4">
-              <div className="flex border-b border-[#e7d0d1] px-4 gap-8">
+            {/* Tabs and Details (right/under on mobile) */}
+            <div className="w-full max-w-xl px-2 md:px-4 mx-auto md:mx-0">
+              <div className="flex border-b border-[#e7d0d1] px-2 md:px-4 gap-4 md:gap-8 overflow-x-auto">
                 <a
                   className={`items-center justify-center border-b-[3px] pb-[13px] pt-4 ${
                     activeTab === "overview"
@@ -251,11 +251,13 @@ export default function RecipePage() {
                   </p>
                 </a>
               </div>
-              {activeTab === "overview" && (
-                <OverviewSection commentsData={commentsData} />
-              )}
-              {activeTab === "ingredients" && <IngredientsSection />}
-              {activeTab === "instructions" && <InstructionsSection />}
+              <div className="pt-2 md:pt-6">
+                {activeTab === "overview" && (
+                  <OverviewSection commentsData={commentsData} />
+                )}
+                {activeTab === "ingredients" && <IngredientsSection />}
+                {activeTab === "instructions" && <InstructionsSection />}
+              </div>
             </div>
           </main>
         </div>
