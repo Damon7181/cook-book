@@ -2,6 +2,7 @@
 
 import Navbar from "../components/navbar";
 import React, { useState } from "react";
+import axios from "axios";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
@@ -15,9 +16,32 @@ export default function SignupPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add signup logic here
+    setError("");
+    setSuccess("");
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    try {
+      const res = await axios.post("http://localhost:5000/auth/signup", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
+      setSuccess("Signup successful! You can now log in.");
+      setForm({ name: "", email: "", password: "", confirmPassword: "" });
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error);
+      } else {
+        setError("Network error. Please try again.");
+      }
+    }
   };
 
   return (
@@ -67,6 +91,12 @@ export default function SignupPage() {
             className="border border-gray-300 rounded-md px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-200"
             required
           />
+          {error && (
+            <div className="text-red-500 text-center text-sm">{error}</div>
+          )}
+          {success && (
+            <div className="text-green-600 text-center text-sm">{success}</div>
+          )}
           <button
             type="submit"
             className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-md transition"

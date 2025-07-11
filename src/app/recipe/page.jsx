@@ -171,8 +171,57 @@ function InstructionsSection() {
   );
 }
 
+import { useEffect } from "react";
+import axios from "axios";
+
 export default function RecipePage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [recipe, setRecipe] = useState(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (!id) {
+      setError("No recipe id provided");
+      return;
+    }
+    const fetchRecipe = async () => {
+      setError("");
+      try {
+        const res = await axios.get(`http://localhost:5000/recipes/${id}`);
+        setRecipe(res.data);
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          setError(err.response.data.error);
+        } else {
+          setError("Network error. Please try again.");
+        }
+      }
+    };
+    fetchRecipe();
+  }, []);
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-red-500">{error}</div>
+        </div>
+      </>
+    );
+  }
+  if (!recipe) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen">
+          <div>Loading...</div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="relative min-h-screen bg-[#fcf8f8] overflow-x-hidden">
@@ -184,14 +233,17 @@ export default function RecipePage() {
             {/* Recipe Content */}
             <div className="max-w-[600px] w-full flex-shrink-0 mx-auto md:mx-0 sticky top-24 self-start">
               <h4 className="text-red-900 text-sm mb-4">
-                Recipe <span className="text-black font-semibold">/ Pasta</span>
+                Recipe{" "}
+                <span className="text-black font-semibold">
+                  / {recipe.cuisine}
+                </span>
               </h4>
-              <h1 className="text-3xl font-bold mb-4">Delicious Recipe</h1>
+              <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
               <div className="w-full flex justify-center">
                 <div className="relative w-full max-w-[600px] h-[220px] md:h-[360px]">
                   <Image
-                    src="/pasta.jpg"
-                    alt="Recipe Image"
+                    src={recipe.image}
+                    alt={recipe.title}
                     fill
                     className="rounded-xl object-cover mb-6"
                     style={{ objectFit: "cover" }}
@@ -253,10 +305,50 @@ export default function RecipePage() {
               </div>
               <div className="pt-2 md:pt-6">
                 {activeTab === "overview" && (
-                  <OverviewSection commentsData={commentsData} />
+                  <div>
+                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">
+                      About
+                    </h3>
+                    <p className="text-base font-normal leading-normal pb-3 pt-1">
+                      {recipe.description}
+                    </p>
+                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">
+                      Cuisine
+                    </h3>
+                    <p className="text-base font-normal leading-normal pb-3 pt-1">
+                      {recipe.cuisine}
+                    </p>
+                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">
+                      Cooking Time
+                    </h3>
+                    <p className="text-base font-normal leading-normal pb-3 pt-1">
+                      {recipe.cookingTime} minutes
+                    </p>
+                    {/* Ratings and Comments can be added here */}
+                  </div>
                 )}
-                {activeTab === "ingredients" && <IngredientsSection />}
-                {activeTab === "instructions" && <InstructionsSection />}
+                {activeTab === "ingredients" && (
+                  <div className="pt-6">
+                    <h3 className="text-lg font-bold mb-2">Ingredients</h3>
+                    <ul className="list-disc pl-6 text-base text-[#1b0e0e]">
+                      {recipe.ingredients.map((ing) => (
+                        <li key={ing.id}>
+                          {ing.name} {ing.quantity && `- ${ing.quantity}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {activeTab === "instructions" && (
+                  <div className="pt-6">
+                    <h3 className="text-lg font-bold mb-2">Instructions</h3>
+                    <ol className="list-decimal pl-6 text-base text-[#1b0e0e] space-y-2">
+                      {recipe.instructions.map((step) => (
+                        <li key={step.id}>{step.text}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
               </div>
             </div>
           </main>

@@ -1,8 +1,11 @@
 "use client";
-import Image from "next/image";
-import Navbar from "../components/navbar-auth";
-import React, { useState } from "react";
 
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import axios from "axios";
+import Navbar from "../components/navbar-auth";
+
+// Subcomponents
 function AllRecipes({ savedRecipes, cookedRecipes }) {
   return (
     <div className="mt-6">
@@ -24,6 +27,7 @@ function AllRecipes({ savedRecipes, cookedRecipes }) {
     </div>
   );
 }
+
 function SavedRecipes({ savedRecipes }) {
   return (
     <div className="mt-6">
@@ -81,86 +85,99 @@ function AboutSection() {
   );
 }
 
-export default function ProfilePage() {
+function ProfilePage() {
   const [activeTab, setActiveTab] = useState("all");
-  const savedRecipes = [
-    { title: "Spicy Thai Basil Chicken", image: "/spicy-thai.jpg" },
-    { title: "Creamy Tomato Pasta", image: "/creamy-tomato.jpg" },
-    { title: "Lemon Herb Roasted Salmon", image: "/lemon-salmon.jpg" },
-    { title: "Chocolate Chip Cookies", image: "/cookies.jpg" },
-  ];
-  const cookedRecipes = [
-    { title: "Classic Margherita Pizza", image: "/margherita.jpg" },
-    { title: "Beef Stir-Fry with Noodles", image: "/beef-noodles.jpg" },
-    { title: "Avocado Toast with Poached Egg", image: "/avocado-toast.jpg" },
-    { title: "Blueberry Muffins", image: "/blueberry-muffins.jpg" },
-  ];
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setError("");
+      try {
+        const token =
+          typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        const res = await axios.get("http://localhost:5000/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setProfile(res.data);
+      } catch (err) {
+        if (err.response?.data?.error) {
+          setError(err.response.data.error);
+        } else {
+          setError("Network error. Please try again.");
+        }
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-red-500">{error}</div>
+        </div>
+      </>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen">
+          <div>Loading...</div>
+        </div>
+      </>
+    );
+  }
+
+  const savedRecipes = profile.savedRecipes.map((s) => s.recipe);
+  const cookedRecipes = profile.cookedRecipes.map((c) => c.recipe);
 
   return (
     <>
-      <Navbar user={{ name: "Sophia Bennett" }} />
+      <Navbar user={{ name: profile.name }} />
       <div className="max-w-5xl mx-auto py-10 px-4 min-h-screen">
         <div className="flex flex-col items-center text-center">
           <Image
-            src="/sophia.jpg"
+            src={profile.image || "/ethan.jpg"}
             alt="Profile Picture"
             width={96}
             height={96}
             className="rounded-full"
           />
-          <h1 className="text-xl font-semibold mt-4">Sophia Bennett</h1>
-          <p className="text-gray-500">Joined in 2021</p>
+          <h1 className="text-xl font-semibold mt-4">{profile.name}</h1>
+          <p className="text-gray-500">
+            Joined {new Date(profile.createdAt).getFullYear()}
+          </p>
           <p className="text-gray-500 text-sm mt-1">
-            123 followers · 45 following
+            {profile.followedBy?.length || 0} followers ·{" "}
+            {profile.following?.length || 0} following
           </p>
           <button className="mt-3 px-4 py-2 rounded-md bg-gray-200 text-sm font-medium">
             Edit profile
           </button>
         </div>
+
         {/* Tabs */}
         <div className="flex justify-center border-b mt-8 flex-wrap gap-2">
-          <button
-            className={`py-2 px-4 text-sm font-semibold ${
-              activeTab === "all"
-                ? "border-b-2 border-red-500 text-black"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("all")}
-          >
-            All
-          </button>
-          <button
-            className={`py-2 px-4 text-sm font-semibold ${
-              activeTab === "saved"
-                ? "border-b-2 border-red-500 text-black"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("saved")}
-          >
-            Saved
-          </button>
-          <button
-            className={`py-2 px-4 text-sm font-semibold ${
-              activeTab === "cooked"
-                ? "border-b-2 border-red-500 text-black"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("cooked")}
-          >
-            Cooked
-          </button>
-
-          <button
-            className={`py-2 px-4 text-sm font-semibold ${
-              activeTab === "about"
-                ? "border-b-2 border-red-500 text-black"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("about")}
-          >
-            About
-          </button>
+          {["all", "saved", "cooked", "about"].map((tab) => (
+            <button
+              key={tab}
+              className={`py-2 px-4 text-sm font-semibold ${
+                activeTab === tab
+                  ? "border-b-2 border-red-500 text-black"
+                  : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
         </div>
+
         {/* Tab Content */}
         {activeTab === "saved" && <SavedRecipes savedRecipes={savedRecipes} />}
         {activeTab === "cooked" && (
@@ -177,3 +194,5 @@ export default function ProfilePage() {
     </>
   );
 }
+
+export default ProfilePage;
