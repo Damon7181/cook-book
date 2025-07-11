@@ -28,7 +28,7 @@ export default function SignupPage() {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:5000/auth/signup", {
+      const res = await axios.post("https://cook-book-backend-production.up.railway.app/auth/signup", {
         name: form.name,
         email: form.email,
         password: form.password,

@@ -52,7 +52,7 @@ export default function CreatePage() {
             .map((t, idx) => ({ step: idx + 1, text: t })),
         };
       }
-      await axios.post("http://localhost:5000/recipes", payload, {
+      await axios.post("https://cook-book-backend-production.up.railway.app/recipes", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuccess("Recipe created!");

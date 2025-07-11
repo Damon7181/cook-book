@@ -188,7 +188,7 @@ export default function RecipePage() {
     const fetchRecipe = async () => {
       setError("");
       try {
-        const res = await axios.get(`http://localhost:5000/recipes/${id}`);
+        const res = await axios.get(`https://cook-book-backend-production.up.railway.app/recipes/${id}`);
         setRecipe(res.data);
       } catch (err) {
         if (err.response && err.response.data && err.response.data.error) {

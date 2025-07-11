@@ -96,7 +96,7 @@ function ProfilePage() {
       try {
         const token =
           typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        const res = await axios.get("http://localhost:5000/users/me", {
+        const res = await axios.get("https://cook-book-backend-production.up.railway.app/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfile(res.data);

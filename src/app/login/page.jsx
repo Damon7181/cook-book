@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", form);
+      const res = await axios.post("https://cook-book-backend-production.up.railway.app/auth/login", form);
       const data = res.data;
       // Store JWT in localStorage for future requests
       if (typeof window !== "undefined") {
