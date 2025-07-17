@@ -10,6 +10,15 @@ import { useState } from "react";
 
 export default function NavbarAuth({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
+
+  // Logout handler
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    }
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm">
@@ -17,15 +26,24 @@ export default function NavbarAuth({ user }) {
         <div className="flex justify-between h-16 items-center">
           {/* Logo + Nav Links (Desktop) */}
           <div className="flex items-center space-x-6">
-            <Link href="/" className="flex items-center text-xl font-semibold text-gray-900">
+            <Link
+              href="/"
+              className="flex items-center text-xl font-semibold text-gray-900"
+            >
               <FaBurger className="mr-2" />
               CookBook
             </Link>
 
             <div className="hidden md:flex items-center space-x-4">
-              <Link href="/" className="text-black">Home</Link>
-              <Link href="/explore" className="text-black">Explore</Link>
-              <Link href="/create" className="text-black">Create</Link>
+              <Link href="/" className="text-black">
+                Home
+              </Link>
+              <Link href="/explore" className="text-black">
+                Explore
+              </Link>
+              <Link href="/create" className="text-black">
+                Create
+              </Link>
             </div>
           </div>
 
@@ -46,12 +64,33 @@ export default function NavbarAuth({ user }) {
               <FaBell className="text-gray-500 text-lg" />
             </button>
 
-            {/* Avatar */}
-            <Link href="/profile">
-              <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-200 bg-gray-100">
+            {/* Avatar with Dropdown */}
+            <div className="relative">
+              <button
+                className="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-200 bg-gray-100 focus:outline-none"
+                onClick={() => setAvatarOpen((open) => !open)}
+                aria-label="User menu"
+              >
                 <Image src="/sophia.jpg" alt="Profile" width={32} height={32} />
-              </div>
-            </Link>
+              </button>
+              {avatarOpen && (
+                <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded-md shadow-lg z-20">
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setAvatarOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={handleLogout}
+                  >
+                    Log Out
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Hamburger Menu (Mobile) */}
@@ -68,10 +107,18 @@ export default function NavbarAuth({ user }) {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden mt-2 space-y-3 text-sm text-gray-700 flex flex-col">
-            <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
-            <Link href="/explore" onClick={() => setMenuOpen(false)}>Explore</Link>
-            <Link href="/create" onClick={() => setMenuOpen(false)}>Create</Link>
-            <Link href="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>
+            <Link href="/" onClick={() => setMenuOpen(false)}>
+              Home
+            </Link>
+            <Link href="/explore" onClick={() => setMenuOpen(false)}>
+              Explore
+            </Link>
+            <Link href="/create" onClick={() => setMenuOpen(false)}>
+              Create
+            </Link>
+            <Link href="/profile" onClick={() => setMenuOpen(false)}>
+              Profile
+            </Link>
             <div className="flex items-center bg-gray-200 rounded-md px-3 py-1">
               <FaSearch className="text-gray-500 mr-2" />
               <input

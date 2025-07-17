@@ -24,7 +24,7 @@ export default function CreatePage() {
   };
 
   const handleSubmit = async (e) => {
-    debugger;
+    // debugger;
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -52,9 +52,13 @@ export default function CreatePage() {
             .map((t, idx) => ({ step: idx + 1, text: t })),
         };
       }
-      await axios.post("https://cook-book-backend-production.up.railway.app/recipes", payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.post(
+        "https://cook-book-backend-production.up.railway.app/recipes",
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setSuccess("Recipe created!");
       setForm({
         title: "",

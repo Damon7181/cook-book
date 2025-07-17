@@ -89,6 +89,7 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState("all");
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
+  const [exploreRecipes, setExploreRecipes] = useState([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -96,9 +97,12 @@ function ProfilePage() {
       try {
         const token =
           typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        const res = await axios.get("https://cook-book-backend-production.up.railway.app/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          "https://cook-book-backend-production.up.railway.app/users/me",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setProfile(res.data);
       } catch (err) {
         if (err.response?.data?.error) {
@@ -108,7 +112,18 @@ function ProfilePage() {
         }
       }
     };
+    const fetchExploreRecipes = async () => {
+      try {
+        const res = await axios.get(
+          "https://cook-book-backend-production.up.railway.app/recipes"
+        );
+        setExploreRecipes(res.data);
+      } catch (err) {
+        // ignore explore errors for now
+      }
+    };
     fetchProfile();
+    fetchExploreRecipes();
   }, []);
 
   if (error) {
@@ -184,10 +199,48 @@ function ProfilePage() {
           <CookedRecipes cookedRecipes={cookedRecipes} />
         )}
         {activeTab === "all" && (
-          <AllRecipes
-            savedRecipes={savedRecipes}
-            cookedRecipes={cookedRecipes}
-          />
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold mb-3">All Recipes</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {exploreRecipes.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  className="rounded-lg border p-3 shadow-sm bg-white"
+                >
+                  <Image
+                    src={recipe.image || "/pasta.jpg"}
+                    alt={recipe.title}
+                    width={300}
+                    height={200}
+                    className="rounded-md object-cover w-full h-[150px] mb-2"
+                  />
+                  <p className="text-sm font-bold mb-1">{recipe.title}</p>
+                  <p className="text-xs text-[#994d51] mb-1">
+                    {recipe.cuisine}
+                  </p>
+                  {recipe.author && (
+                    <div className="flex items-center gap-2 bg-white bg-opacity-95 px-3 py-1 rounded-full shadow border border-gray-200 mt-2">
+                      <Image
+                        src={recipe.author.image || "/sophia.jpg"}
+                        alt={recipe.author.name || "Unknown"}
+                        width={24}
+                        height={24}
+                        className="rounded-full border border-gray-300"
+                      />
+                      <span className="text-xs font-semibold text-[#1b0e0e]">
+                        {recipe.author.name || "Unknown"}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {recipe.createdAt
+                          ? new Date(recipe.createdAt).toLocaleDateString()
+                          : ""}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
         {activeTab === "about" && <AboutSection />}
       </div>
