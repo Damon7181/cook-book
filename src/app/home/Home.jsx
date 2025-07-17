@@ -158,12 +158,18 @@ export default function Home() {
               ))}
               {recipes.length > 6 && (
                 <div className="col-span-full flex justify-center mt-4">
-                  <Link
-                    href="/explore"
+                  <button
                     className="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md text-sm font-medium transition"
+                    onClick={() => {
+                      if (!isLoggedIn) {
+                        window.location.href = "/signup";
+                      } else {
+                        window.location.href = "/explore";
+                      }
+                    }}
                   >
                     View All
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
